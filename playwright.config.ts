@@ -9,7 +9,7 @@ export default defineConfig({
     browserName: "chromium",
     channel:
       process.env.PLAYWRIGHT_CHANNEL ||
-      (process.platform === "win32" ? "msedge" : undefined),
+      (process.platform === "win32" ? "chrome" : undefined),
     trace: "retain-on-failure",
   },
   webServer: {

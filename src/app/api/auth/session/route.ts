@@ -11,6 +11,7 @@ import {
   SESSION_DURATION_MS,
 } from "@/lib/auth/policy";
 import { parseSiteUrl } from "@/lib/config";
+import { readLeadershipApproval } from "@/lib/auth/approval";
 
 export const runtime = "nodejs";
 const headers = { "Cache-Control": "private, no-store, max-age=0" };
@@ -57,17 +58,17 @@ export async function POST(request: NextRequest) {
   )
     return response("invalid_request", 400);
   try {
-    const { auth, db } = getFirebaseAdmin();
+    const { auth } = getFirebaseAdmin();
     const token = await auth.verifyIdToken(idToken, true);
     const age = Date.now() / 1000 - token.auth_time;
     if (age < -30 || age > 300) return response("recent_login_required", 401);
-    const [user, record] = await Promise.all([
+    const [user, staff] = await Promise.all([
       auth.getUser(token.uid),
-      db.collection("staff_access").doc(token.uid).get(),
+      readLeadershipApproval(token.uid),
     ]);
     if (user.disabled) return response("unapproved", 403);
     const decision = decideStaffAccess({
-      staff: parseStaffRecord(record.data()),
+      staff,
       emailVerified: user.emailVerified,
       secondFactor: token.firebase?.sign_in_second_factor === "totp",
       hasEnrolledFactor: Boolean(user.multiFactor?.enrolledFactors?.length),

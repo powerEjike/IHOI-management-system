@@ -1,5 +1,8 @@
 # Foundation verification
 
+> Current milestone: see [Leadership and converts verification](LEADERSHIP-AND-CONVERTS.md). The three-account leadership model and successful Chrome checks supersede earlier staff-role examples and browser limitations below.
+
+
 ## Scope
 
 Visitors navigate the public page shells, mission section, and partnership pathways. Staff access ends at an unavailable-access notice. This stage has no database, API mutations, authentication, or active forms.

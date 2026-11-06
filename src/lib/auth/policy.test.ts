@@ -7,104 +7,79 @@ import {
   requiresMfa,
   type StaffRecord,
 } from "./policy";
-const worker: StaffRecord = {
-  displayName: "Test Worker",
+const leader: StaffRecord = {
+  displayName: "Test Leader",
   active: true,
-  roles: ["follow_up_worker"],
+  roles: ["coo"],
 };
-describe("staff permission boundary", () => {
-  it("requires approval even for authenticated users", () => {
+describe("three-account leadership policy", () => {
+  it("requires active approval and verified email", () => {
+    const verified = {
+      emailVerified: true,
+      secondFactor: true,
+      hasEnrolledFactor: true,
+    };
+    expect(decideStaffAccess({ ...verified, staff: null })).toBe("unapproved");
     expect(
-      decideStaffAccess({
-        staff: null,
-        emailVerified: true,
-        secondFactor: true,
-        hasEnrolledFactor: true,
-      }),
+      decideStaffAccess({ ...verified, staff: { ...leader, active: false } }),
     ).toBe("unapproved");
     expect(
-      decideStaffAccess({
-        staff: { ...worker, active: false },
-        emailVerified: true,
-        secondFactor: true,
-        hasEnrolledFactor: true,
-      }),
-    ).toBe("unapproved");
-  });
-  it("requires verified email", () => {
-    expect(
-      decideStaffAccess({
-        staff: worker,
-        emailVerified: false,
-        secondFactor: false,
-        hasEnrolledFactor: false,
-      }),
+      decideStaffAccess({ ...verified, staff: leader, emailVerified: false }),
     ).toBe("unverified");
   });
-  it("requires MFA for privileged roles including combined roles", () => {
-    expect(requiresMfa(["content_editor", "super_admin"])).toBe(true);
-    expect(
-      decideStaffAccess({
-        staff: { ...worker, roles: ["church_admin"] },
-        emailVerified: true,
-        secondFactor: false,
-        hasEnrolledFactor: false,
-      }),
-    ).toBe("mfa_required");
-    expect(
-      decideStaffAccess({
-        staff: { ...worker, roles: ["church_admin"] },
-        emailVerified: true,
-        secondFactor: true,
-        hasEnrolledFactor: true,
-      }),
-    ).toBe("allowed");
-  });
-  it("does not bypass an opted-in or removed MFA factor", () => {
-    expect(
-      decideStaffAccess({
-        staff: worker,
-        emailVerified: true,
-        secondFactor: false,
-        hasEnrolledFactor: true,
-      }),
-    ).toBe("mfa_required");
-    expect(
-      decideStaffAccess({
-        staff: { ...worker, roles: ["super_admin"] },
-        emailVerified: true,
-        secondFactor: true,
-        hasEnrolledFactor: false,
-      }),
-    ).toBe("mfa_required");
-  });
-  it("allows approved workers and fails closed on unknown or empty roles", () => {
-    expect(
-      decideStaffAccess({
-        staff: worker,
-        emailVerified: true,
-        secondFactor: false,
-        hasEnrolledFactor: false,
-      }),
-    ).toBe("allowed");
+  it.each(["super_admin", "president", "coo"] as const)(
+    "requires live MFA for %s",
+    (role) => {
+      const staff = { ...leader, roles: [role] };
+      expect(requiresMfa(staff.roles)).toBe(true);
+      expect(
+        decideStaffAccess({
+          staff,
+          emailVerified: true,
+          secondFactor: false,
+          hasEnrolledFactor: true,
+        }),
+      ).toBe("mfa_required");
+      expect(
+        decideStaffAccess({
+          staff,
+          emailVerified: true,
+          secondFactor: true,
+          hasEnrolledFactor: false,
+        }),
+      ).toBe("mfa_required");
+      expect(
+        decideStaffAccess({
+          staff,
+          emailVerified: true,
+          secondFactor: true,
+          hasEnrolledFactor: true,
+        }),
+      ).toBe("allowed");
+    },
+  );
+  it("rejects old staff roles, combined roles, and invalid profile data", () => {
     for (const roles of [
       [],
+      ["follow_up_worker"],
+      ["content_editor"],
+      ["church_admin"],
       ["owner"],
-      ["super_admin", "owner"],
-      ["secretary", "secretary"],
+      ["super_admin", "president"],
+      ["coo", "coo"],
       [7],
     ])
-      expect(parseStaffRecord({ ...worker, roles })).toBeNull();
-    expect(parseStaffRecord({ ...worker, active: "true" })).toBeNull();
+      expect(parseStaffRecord({ ...leader, roles })).toBeNull();
+    expect(parseStaffRecord({ ...leader, active: "true" })).toBeNull();
     expect(
-      parseStaffRecord({ ...worker, displayName: "x".repeat(121) }),
+      parseStaffRecord({ ...leader, displayName: "x".repeat(121) }),
     ).toBeNull();
-    expect(hasAnyRole(worker.roles, ["super_admin"])).toBe(false);
-    expect(hasAnyRole(worker.roles, [])).toBe(false);
+    expect(hasAnyRole(leader.roles, ["super_admin"])).toBe(false);
+    expect(hasAnyRole(leader.roles, [])).toBe(false);
   });
 });
-describe("session CSRF origin checks", () => {
-  it("requires an exact origin", () => {
+describe("same-origin protection", () => {
+  it("requires an exact browser origin", () => {
     expect(
       isSameOrigin("https://ministry.example", "https://ministry.example"),
     ).toBe(true);

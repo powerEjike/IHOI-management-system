@@ -3,7 +3,7 @@
 ## Working Product Requirements Document
 
 **Ministry:** International House of Incense Ministries (IHOI)
-**Version:** 1.2 — Firebase implementation baseline
+**Version:** 1.3 — Three-account leadership baseline
 **Date:** 6 November 2026
 **Release:** Single-ministry responsive web application
 **Status:** Ready to guide design and implementation; production content and account owners remain launch inputs.
@@ -63,7 +63,7 @@ These features require an explicit scope change. General church-administration m
 2. The interface language is English. Default timezone is Africa/Lagos; dates are stored consistently and displayed in the ministry timezone.
 3. No financial transactions or contribution amounts are stored in v1. “Give” provides approved informational partnership instructions only.
 4. Official convert records are created manually by authorized staff. Public enquiries never become converts automatically.
-5. Initial convert assignment may be pending, but unassigned records must be visible to coordinators as an action queue.
+5. Initial convert assignment may be pending, but unassigned records must be visible to leadership as an action queue.
 6. Follow-up reminders are delivered inside the portal. A scheduled server job creates reminder records even while nobody is browsing.
 7. Staff must sign in to read reminders; v1 does not promise delivery outside the application.
 8. Media uses recorded publication permission. Large videos/audio are externally hosted and embedded from supported providers.
@@ -72,28 +72,25 @@ These features require an explicit scope change. General church-administration m
 
 ## 4. Users and authorization
 
-Accounts belong to individual staff. Shared staff passwords are prohibited. Roles may be combined when one person has multiple responsibilities; permissions are the union of explicitly assigned roles.
+The portal has exactly three reserved account slots: Super Admin, President, and COO. Each person has one individual account and one role. Workers, volunteers, converts, disciples, secretaries, and content contributors are records only and do not receive portal accounts.
 
-| Role | Allowed responsibilities | Restrictions |
+| Role | Responsibilities | Account boundary |
 |---|---|---|
-| Super Admin | Account invitations, role assignment, settings, all operational modules, audit access | Small number of privileged accounts; MFA required |
-| Church Admin | All ministry operations, content publication, reports, worker clearance | Cannot grant roles, create Super Admins, or change security configuration |
-| Evangelism Coordinator | Converts, assignments, follow-up oversight, outreach reports and publication, discipleship, related reports | No account/security administration; MFA required |
-| Secretary | Draft outreach/events, operational media preparation, outreach reports and exports | No convert directory or private follow-up notes by default; no publication authority |
-| Follow-Up Worker | Limited details for assigned converts, own contact logs, scheduled actions, assigned discipleship progress | Cannot search all converts, reassign cases, publish content, or export personal records |
-| Content Editor | Draft/edit public pages, resources, projects, gallery, testimonies, and event content | Cannot publish, view convert records, or read private enquiries |
-| Public Visitor | Published pages, public resource downloads, enquiry submission | No private database reads or portal access |
+| Super Admin | Full ministry operations, public content, publication, reports, audit access, and leadership invitations | Existing administrator; controls the reserved President and COO invitations |
+| President | Broad administrative access to all ministry operations, website content, publication, reports, and oversight | Creates own account with a private invitation; one President slot |
+| COO | Broad administrative access to all ministry operations, website content, publication, reports, and oversight | Creates own account with a private invitation; one COO slot |
+| Public Visitor | Published content, resource downloads, and approved public submission forms | No portal access |
 
-Additional rules:
-
-- Super Admin and Church Admin review contact, partnership, and volunteer submissions.
-- Church Admin approves volunteer applications and records clearance. Super Admin also has these permissions.
-- Publication requires Church Admin or Super Admin, except outreach reports may also be published by an Evangelism Coordinator.
-- A user may approve their own content when their role permits publication; two-person approval is not required in v1. Publication remains audited.
-- Secretary access to converts requires a separate authorized role; there is no hidden per-record exception mechanism in v1.
-- A worker record does not create a login. Account invitation and assignment of the Follow-Up Worker role are separate authorized actions.
-- Server checks, database policies, and storage policies enforce access. Hiding navigation alone is insufficient.
-- On reassignment or account deactivation, the former worker loses access on subsequent requests. Private files are not exposed through permanent public URLs.
+- All three leaders require verified email and authenticator-app MFA.
+- A live server-managed roster binds each role to one Firebase UID. A staff profile alone does not grant access. A fourth account or duplicate role-holder is denied.
+- The Super Admin issues a private, email-bound, seven-day invitation for President or COO. The invited leader chooses their own password, verifies email, and claims the slot. Codes are hashed at rest, consumed once, and never placed in URLs.
+- President and COO have full operational/content access but cannot create additional portal accounts or grant roles.
+- All three may review enquiries, approve volunteers, maintain records, publish content, and export permitted reports. Publication and sensitive actions remain audited.
+- Workers perform ministry duties outside the application; leadership records their activity. A Worker ministry stage never creates a login.
+- Follow-up identifies the responsible leadership account. Later worker-record assignment does not grant access.
+- Database/storage rules and explicit server authorization enforce these boundaries. Hiding navigation is insufficient.
+- Recheck roster membership, active approval, Firebase account status, and session revocation on private requests. Deactivation removes access on subsequent requests.
+- Account replacement/recovery is a privileged audited process. The sole Super Admin must not lose administrative coverage accidentally.
 
 ## 5. Public website
 
@@ -150,11 +147,11 @@ Show role-appropriate live summaries with explicit date ranges:
 - Pending volunteer/partnership/contact submissions for authorized reviewers.
 - Active projects and unread reminders.
 
-Workers see their own caseload. Content Editors see content tasks, not ministry case metrics. Every card links to its underlying filtered list. Empty states explain the next permitted action.
+All three leaders see operational summaries. Workers and contributors have no separate portal accounts. Every card links to its underlying filtered list. Empty states explain the next permitted action.
 
 ### 6.2 Converts
 
-Authorized administrators/coordinators can create, edit, search, filter, assign, and archive converts.
+Leadership can create, edit, search, filter, assign, and archive converts.
 
 | Field | Rule |
 |---|---|
@@ -166,7 +163,7 @@ Authorized administrators/coordinators can create, edit, search, filter, assign,
 | Outreach | Optional link to an outreach record |
 | Ministry stage | Convert, Disciple, or Worker; defaults to Convert |
 | Contact permission | Granted, declined, or unknown, with recorded source/date when known |
-| Assigned worker | Optional current primary worker; change recorded in assignment history |
+| Follow-up lead | Optional Super Admin, President, or COO; changes recorded in assignment history |
 | Notes | Private; collect only relevant information |
 
 - Before creation, flag matching normalized phone/email and similar names. Staff can review a candidate or proceed with a documented reason; contact details need not be globally unique because households may share them.
@@ -174,18 +171,18 @@ Authorized administrators/coordinators can create, edit, search, filter, assign,
 - Contact permission of declined blocks outreach scheduling. Unknown permission requires review before contact; a permission-confirmation action can be recorded where appropriate.
 - Follow-up history and discipleship are related records, not duplicate free-text fields.
 - Authorized staff may correct ministry stage in either direction with a required reason and audit entry. Course completion does not change ministry stage automatically.
-- Archive hides a convert from active lists and stops future reminders while retaining history. Restoring requires an authorized administrator/coordinator.
+- Archive hides a convert from active lists and stops future reminders while retaining history. Restoring requires an authorized leader.
 
 ### 6.3 Follow-up and reminders
 
-- Each convert has one current primary worker and historical assignments.
+- Each convert has one current leadership follow-up lead and historical assignments. Worker involvement may be linked as a record without granting login access.
 - A scheduled action has an owner, due date/time, type (call, visit, other), status (open, completed, cancelled), and optional private notes.
 - A contact log has actual contact date/time, type, outcome (reached, no response, declined, other), notes, and optional next action.
-- Workers can append contact logs and complete assigned actions. Administrators/coordinators can correct records; corrections retain an audit trail.
+- Leadership records contact logs and completes actions, including work carried out by ministry workers. Leadership can correct records; corrections retain an audit trail.
 - A successful “reached” log resolves awaiting-first-contact; attempts with no response remain visible as awaiting first contact.
 - “Overdue” means an open action whose due time has passed. A convert without an action is shown as unscheduled, not falsely treated as overdue.
 - New registrations target first action within 48 hours by default. The portal proposes this date and allows an authorized override with a reason.
-- A scheduled job runs at least hourly, creates due/overdue in-portal reminders, and escalates overdue cases to coordinators after 48 hours. Intervals are configurable by administrators.
+- A scheduled job runs at least hourly, creates due/overdue in-portal reminders, and escalates overdue cases to leadership after 48 hours. Intervals are configurable by administrators.
 - Reminders have stable deduplication keys per action, recipient, and reminder type. Repeated or retried jobs do not create duplicates.
 - Completion, cancellation, reassignment, archiving, and deactivation resolve or reroute outstanding reminders. Notification previews contain no private notes.
 - Failed job runs are logged and visible to Super Admin. The next run can safely retry missed work.
@@ -203,8 +200,8 @@ Authorized administrators/coordinators can create, edit, search, filter, assign,
 ### 6.5 Discipleship
 
 - Staff create courses, ordered lessons, descriptions, and resource links; publication controls the public catalogue.
-- Authorized administrators/coordinators enrol converts and assign a responsible worker.
-- Workers update lesson completion only for their currently assigned converts.
+- Leadership enrol converts and assign a responsible worker.
+- Leadership records lesson completion and worker involvement without providing worker logins.
 - Enrolment status is active, completed, or withdrawn. The system marks completion when all required lessons are complete and records completion date.
 - Course versions are fixed for existing enrolments. Adding/removing required lessons creates a new version for future enrolments, preserving historical completion.
 - Completed enrolments and lesson corrections are auditable. A disciple may take multiple courses.
@@ -218,8 +215,8 @@ Authorized administrators/coordinators can create, edit, search, filter, assign,
 - Worker status is pending training, active, or inactive. Record training completion separately from application approval.
 - Applicants under 18 remain in review pending an approved safeguarding process; they cannot be activated into unsupervised roles in v1.
 - Roles involving unsupervised contact with minors require a reference/background-check clearance before activation. Store status, reviewer, date, and an external reference only; do not upload full background-check reports in v1.
-- Only Super Admin and Church Admin see clearance details. Other authorized staff see eligibility status only.
-- Worker activation does not grant a staff account or permissions automatically.
+- Only the three leadership accounts may view restricted clearance details. Public visitors and workers have no access.
+- Worker activation never grants a portal account or login permissions.
 
 ### 6.7 Content, projects, and events
 
@@ -234,7 +231,7 @@ Authorized administrators/coordinators can create, edit, search, filter, assign,
 ### 6.8 Settings and account administration
 
 - Edit ministry name, logo, brand colors, contact details, ministry times, social links, homepage selections, and approved privacy/terms copy.
-- Invite accounts, assign roles, require MFA for Super Admin, Church Admin, and Evangelism Coordinator, reset access through the authentication provider, and deactivate staff.
+- The Super Admin invites the President and COO to their reserved slots. Require MFA for all three leaders, support password recovery, and manage deactivation without allowing extra accounts.
 - Prevent deactivation or demotion of the final active Super Admin.
 - Deactivation revokes sessions and access; pending assignments are flagged for reassignment.
 - Privileged roles cannot be self-granted through profile updates or client requests.
@@ -250,7 +247,7 @@ Authorized administrators/coordinators can create, edit, search, filter, assign,
 | Reported decisions for Christ | Sum of validated decisions from those outreaches; never add registered convert counts |
 | Disciples receiving follow-up | Distinct active, non-archived convert records at Disciple stage with at least one completed contact in the displayed period; aggregate count only |
 
-Public figures display a date range and last-updated time. Zero, unavailable, and unknown are distinct. Never invent figures to fill a layout. Public discipleship counts require an explicit publication setting enabled by a Church Admin; they are hidden by default.
+Public figures display a date range and last-updated time. Zero, unavailable, and unknown are distinct. Never invent figures to fill a layout. Public discipleship counts require an explicit publication setting enabled by leadership; they are hidden by default.
 
 ### Private reports
 
@@ -262,14 +259,14 @@ Public figures display a date range and last-updated time. Zero, unavailable, an
 
 Every date-filtered report states which date is used. Use registration date for new converts, activity date for outreach, due date for open-action reports, actual contact date for contact activity, and completion date for course completions. Caseload and stage totals are explicitly “as of now” in v1; do not imply historical snapshots.
 
-CSV exports follow the same permissions and filters as the screen. Private personal exports require Church Admin, Super Admin, or Evangelism Coordinator; Secretaries can export outreach aggregates only. Workers cannot bulk-export personal records. Exports are audited and protect spreadsheet users against formula injection. Print-friendly views are included; generated PDF reports are deferred.
+CSV exports follow the same permissions and filters as the screen. Private exports are available only to Super Admin, President, and COO. Workers and volunteers have no portal or export access. Exports are audited and protect spreadsheet users against formula injection. Print-friendly views are included; generated PDF reports are deferred.
 
 ## 8. Core workflows
 
 1. **Convert:** authorized staff checks duplicates → manually creates record → assigns worker → schedules first action → worker logs contact → staff tracks discipleship.
-2. **Follow-up reassignment:** coordinator changes worker → previous access ends → open actions transfer with an audit entry → reminders reroute → new worker sees relevant history.
+2. **Follow-up reassignment:** leadership changes the responsible lead → actions transfer with an audit entry → reminders reroute; no worker login is granted.
 3. **Outreach:** staff drafts activity → authorized publisher releases upcoming listing → staff completes report and metrics → publisher validates and republishes → eligible impact counters update.
-4. **Volunteer:** visitor applies → private review → clearance where required → approval → training → active worker → separate account invitation if operational access is needed.
+4. **Volunteer:** visitor applies → private review → clearance where required → approval → training → active worker record; no portal account is created.
 5. **Content:** editor prepares draft and permission evidence → publisher reviews preview → publishes → website updates; unpublishing removes public access.
 6. **Enquiry:** visitor submits → private queue → administrator reviews and assigns response responsibility → staff records outcome → resolves submission. The system does not send messages automatically.
 
@@ -309,7 +306,7 @@ The hosting provider may change without altering product requirements. Infrastru
 - Validate inputs on the server; sanitize rich text and restrict uploads by actual type and size. Default image limit: 10 MB; published document limit: 25 MB. Executable content is rejected.
 - Keep private personal information out of URLs, analytics events, error messages, public media metadata, and routine application logs.
 - Audit role changes, assignment changes, ministry-stage changes, contact-permission changes, corrections, archiving, publication, clearance decisions, and exports. Record actor, timestamp, action, affected record, reason where required, and relevant old/new values without copying whole sensitive notes.
-- Audit entries are append-only for normal users. Access is limited to Super Admin and Church Admin.
+- Audit entries are append-only for normal users. Access is limited to the three leadership accounts.
 
 ### Proposed operational retention defaults
 
@@ -367,7 +364,7 @@ The release is ready for a controlled production pilot when all mandatory checks
 1. All public routes work on mobile and desktop and expose only published content and allowed fields.
 2. Authorized editors can manage website content; only authorized publishers can publish it.
 3. Public users cannot read private submissions, converts, follow-up, or private storage through any supported access path.
-4. A Follow-Up Worker can read/update only assigned cases. A second worker’s UI, direct API, and direct database attempts are denied.
+4. Only the reserved Super Admin, President, and COO may enter the portal. Other Firebase users and duplicate-role profiles are denied through pages and APIs; direct browser database access remains denied.
 5. Reassignment and deactivation remove prior access and resolve/reroute outstanding actions/reminders correctly.
 6. Official converts are created only by authorized manual staff actions. Duplicate warnings and archive behavior work.
 7. Contact restrictions, stage corrections, and permission changes are enforced and audited.
@@ -402,7 +399,7 @@ Development can proceed with placeholders and empty states. Production launch re
 
 - Confirmation of ministry name, logo, colors, approved mission/history, leadership profiles, and contact/ministry times.
 - Initial approved resources, project descriptions, and media, or agreement to hide empty sections.
-- Named Super Admin, Church Admin, Evangelism Coordinator, content publisher, and backup/incident owner; people may hold more than one role.
+- Named Super Admin, President, and COO, with content ownership and backup/incident responsibilities allocated among them.
 - Agreed follow-up hours, capacity, training, and worker eligibility rules.
 - Approved privacy notices, contact-permission wording, media releases, and retention policy.
 - Confirmed domain, hosting accounts, service budgets, and production access.

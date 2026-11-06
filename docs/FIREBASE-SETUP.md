@@ -1,5 +1,8 @@
 # Firebase setup and current boundary
 
+> Current milestone: see [Leadership and converts verification](LEADERSHIP-AND-CONVERTS.md). The three-account leadership model and successful Chrome checks supersede earlier staff-role examples and browser limitations below.
+
+
 ## Project
 
 - Firebase project: `ihoi-management-system`.

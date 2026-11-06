@@ -36,8 +36,10 @@ Exit: the application builds, the public shell renders, and configuration is doc
 - [x] Add live staff approval/role checks, fail-closed browser database rules, and a first-admin bootstrap script.
 - [x] Verify the local server runtime credential.
 - [x] Create the intended first administrator and verify privileged MFA access with a temporary account.
-- [ ] First administrator completes their own password, email-verification, and authenticator setup.
-- [ ] Implement the staff-management UI, invitation workflow, audited role/deactivation changes, and idle timeout.
+- [x] First administrator completed email verification and authenticator enrollment.
+- [x] Restrict portal access to the reserved Super Admin, President, and COO accounts.
+- [x] Add Super Admin invitation UI and email-bound, verified self-registration for President/COO.
+- [ ] Implement account replacement/deactivation controls and configurable idle timeout.
 - [x] Complete live role/MFA/session tests with a temporary account and remove its Auth/staff records.
 
 Exit: unauthorized access is denied through both server and database paths. No real private submissions are collected before this stage passes.
@@ -52,7 +54,8 @@ Exit: staff can publish approved content without code and drafts/private records
 
 ## Stage 4 — Ministry operations
 
-- Implement manual convert registration, duplicate warnings, assignment, and archiving.
+- [x] Implement manual convert registration, search/filter pagination, duplicate warnings, leadership assignment, editing, archive/restore, and audit history.
+- [x] Add real convert dashboard figures and required Firestore indexes.
 - Add follow-up actions, contact logs, reassignment, and hourly in-portal reminders.
 - Add outreach reports and precisely defined publication metrics.
 

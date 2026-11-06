@@ -1,4 +1,5 @@
 "use client";
+import { useHydrated } from "@/lib/use-hydrated";
 
 import { useState } from "react";
 import { FirebaseError } from "firebase/app";
@@ -17,6 +18,7 @@ import {
 import { getBrowserAuth } from "@/lib/firebase/client";
 
 export function LoginForm() {
+  const hydrated = useHydrated();
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [reset, setReset] = useState(false);
@@ -49,13 +51,15 @@ export function LoginForm() {
     }
     if (result.code === "unverified") {
       setNeedsVerification(true);
-      setMessage("Verify your email before signing in to the staff portal.");
+      setMessage(
+        "Verify your email before signing in to the leadership portal.",
+      );
       return;
     }
     await signOut(auth);
     throw new Error(
       result.code === "unapproved"
-        ? "Staff access has not been approved. Contact the ministry administrator."
+        ? "Leadership access has not been approved. Contact the Super Admin."
         : result.code === "not_configured"
           ? "Staff access is awaiting server configuration."
           : "We could not start a secure session. Please sign in again or contact the administrator.",
@@ -200,7 +204,7 @@ export function LoginForm() {
 
   return (
     <div className="auth-form-wrap">
-      <form onSubmit={submit} className="auth-form">
+      <form method="post" onSubmit={submit} className="auth-form">
         {resolver || secret ? (
           <>
             {secret ? (
@@ -215,6 +219,7 @@ export function LoginForm() {
             ) : null}
             <label htmlFor="auth-code">Authenticator code</label>
             <input
+              disabled={busy || !hydrated}
               id="auth-code"
               name="code"
               autoComplete="one-time-code"
@@ -227,8 +232,9 @@ export function LoginForm() {
           </>
         ) : needsEnrollment || needsVerification ? null : (
           <>
-            <label htmlFor="auth-email">Staff email</label>
+            <label htmlFor="auth-email">Leadership email</label>
             <input
+              disabled={busy || !hydrated}
               id="auth-email"
               name="email"
               type="email"
@@ -240,6 +246,7 @@ export function LoginForm() {
               <>
                 <label htmlFor="auth-password">Password</label>
                 <input
+                  disabled={busy || !hydrated}
                   id="auth-password"
                   name="password"
                   type="password"
@@ -257,7 +264,7 @@ export function LoginForm() {
           </p>
         ) : null}
         {!needsEnrollment && !needsVerification ? (
-          <button className="button" disabled={busy} type="submit">
+          <button className="button" disabled={busy || !hydrated} type="submit">
             {busy
               ? "Please wait…"
               : resolver || secret
@@ -272,7 +279,7 @@ export function LoginForm() {
         <button
           className="button"
           type="button"
-          disabled={busy}
+          disabled={busy || !hydrated}
           onClick={enroll}
         >
           Set up authenticator
@@ -282,7 +289,7 @@ export function LoginForm() {
         <button
           className="button"
           type="button"
-          disabled={busy}
+          disabled={busy || !hydrated}
           onClick={verifyEmail}
         >
           Send verification email
@@ -290,13 +297,13 @@ export function LoginForm() {
       ) : null}
       <div className="auth-actions">
         {resolver || secret || needsEnrollment || needsVerification ? (
-          <button type="button" disabled={busy} onClick={restart}>
+          <button type="button" disabled={busy || !hydrated} onClick={restart}>
             Restart sign-in
           </button>
         ) : (
           <button
             type="button"
-            disabled={busy}
+            disabled={busy || !hydrated}
             onClick={() => {
               setReset(!reset);
               setMessage("");
@@ -307,8 +314,8 @@ export function LoginForm() {
         )}
       </div>
       <p className="content-note">
-        Access is for approved ministry staff. There is no public account
-        registration.
+        Portal access is reserved for Super Admin, President, and COO. President
+        and COO signup requires an invitation.
       </p>
     </div>
   );

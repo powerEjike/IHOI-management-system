@@ -22,7 +22,12 @@ test("all public pages render and unknown paths return 404", async ({
     expect(response.headers()["x-content-type-options"]).toBe("nosniff");
   }
   expect((await request.get("/not-a-real-page")).status()).toBe(404);
-  expect((await request.get("/portal/converts")).status()).toBe(404);
+  expect((await request.get("/portal/not-a-real-page")).status()).toBe(404);
+  const protectedPage = await request.get("/portal/converts", {
+    maxRedirects: 0,
+  });
+  expect(protectedPage.status()).toBe(307);
+  expect(protectedPage.headers().location).toContain("/portal/login");
   expect(await (await request.get("/robots.txt")).text()).toContain(
     "Disallow: /",
   );
@@ -115,6 +120,6 @@ test("public submissions stay inactive and private staff pages require sign-in",
   await page.goto("/portal/dashboard");
   await expect(page).toHaveURL(/\/portal\/login$/);
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
-    "staff portal",
+    "leadership portal",
   );
 });

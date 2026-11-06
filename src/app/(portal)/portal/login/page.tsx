@@ -15,10 +15,18 @@ export default function LoginPage() {
       <h1>
         Welcome to
         <br />
-        <em>the staff portal.</em>
+        <em>the leadership portal.</em>
       </h1>
       {configured ? (
-        <LoginForm />
+        <>
+          <LoginForm />
+          <p className="content-note">
+            Have a President or COO invitation?{" "}
+            <Link href="/portal/join" className="text-link">
+              Create your leadership account
+            </Link>
+          </p>
+        </>
       ) : (
         <>
           <p>

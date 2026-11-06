@@ -16,7 +16,9 @@ Implemented stack: Next.js App Router, TypeScript, Tailwind CSS, Firebase Authen
 
 ## Current status
 
-The public application foundation and official ministry logo are implemented. Firebase staff access includes email/password authentication, verified email, TOTP enrollment/challenge, server session cookies, and live staff approval/role checks. Local runtime credentials and the first approved administrator are configured; the account owner must set their password, verify email, and enroll TOTP. Content listings remain honest empty states; public submission forms and operational ministry modules are not enabled.
+The public application foundation and official ministry logo are implemented. Firebase staff access includes email/password authentication, verified email, TOTP enrollment/challenge, server session cookies, and live staff approval/role checks. Local runtime credentials and the first approved administrator are configured; the first administrator has verified email and enrolled TOTP. Content listings remain honest empty states; public submission forms and the remaining operational modules are pending.
+
+The current portal has three reserved accounts only: Super Admin, President, and COO. The Super Admin can invite President/COO to create their own verified accounts. All three have access to the working converts register: create, duplicate review, search, filters, edit, leadership follow-up assignment, archive/restore, and audit history. Workers and volunteers do not receive logins. See [leadership and converts](docs/LEADERSHIP-AND-CONVERTS.md).
 
 See [Firebase setup](docs/FIREBASE-SETUP.md) for the credential boundary, bootstrap process, and setup status. The public web identifiers belong in `.env.local`; Admin credentials must stay server-only and outside Git.
 
@@ -38,15 +40,15 @@ npm run check
 npm run test:e2e
 ```
 
-`check` runs type checking, unit tests, and a production build. Browser tests start their own production server on port 3100, so run a build first and leave that port free. On Windows the tests use installed Microsoft Edge. Elsewhere run `npx playwright install chromium` once. Set `PLAYWRIGHT_CHANNEL` if another supported installed channel is needed.
+`check` runs type checking, unit tests, and a production build. Browser tests start their own production server on port 3100, so run a build first and leave that port free. On Windows the tests use installed Google Chrome. Elsewhere run `npx playwright install chromium` once. Set `PLAYWRIGHT_CHANNEL` if another supported installed channel is needed.
 
-The initial environment passed compilation, nine configuration tests, and HTTP checks for all public routes, missing pages, and response headers. Interactive browser checks were blocked by the local Edge process exiting during startup; mobile menu behavior, visual appearance, and viewport fit still need a successful browser run. See `docs/FOUNDATION-VERIFICATION.md`.
+The current milestone passes 54 unit/contract tests and live Firebase checks, including leadership invitations, access enforcement, converts, duplicate review, and audit history. Chrome browser checks passed registration, editing, archive/restore, search, responsive private layouts, mobile sign-out, and absence of runtime errors. See [current verification](docs/LEADERSHIP-AND-CONVERTS.md). Earlier foundation/browser limitations are historical.
 
-The Firebase stage passes 30 unit/contract tests and live SDK/server checks for worker sessions, privileged TOTP access, immediate deactivation, and logout. See `docs/FIREBASE-SETUP.md` for verification details and the optional restricted-Windows build workaround. Build/dev scripts use Webpack to avoid local Turbopack junction restrictions; normal clean builds remain the default.
+Build/dev scripts use Webpack to avoid local Turbopack junction restrictions; normal clean builds remain the default. See `docs/FIREBASE-SETUP.md` for the optional restricted-Windows build workaround.
 
 ## Preview and launch boundary
 
-Public routes: `/`, `/about`, `/outreach`, `/discipleship`, `/resources`, `/projects`, `/gallery`, `/partner`, `/volunteer`, `/contact`, and `/privacy`. `/portal` sends users to login or the protected `/portal/dashboard` staff shell. Login remains a setup notice until explicitly enabled. Unknown portal subpaths return 404.
+Public routes: `/`, `/about`, `/outreach`, `/discipleship`, `/resources`, `/projects`, `/gallery`, `/partner`, `/volunteer`, `/contact`, and `/privacy`. `/portal` sends users to login or the protected `/portal/dashboard` leadership workspace. Login is enabled with configured Firebase credentials. Unknown portal subpaths return 404.
 
 Search indexing is disabled using page metadata and `robots.txt` while content is unapproved. These controls are not authentication. Before production launch, connect authentication/database policies, approve copy and identity, implement the CMS, verify forms and access rules, and deliberately revisit indexing.
 

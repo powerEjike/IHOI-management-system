@@ -1,6 +1,8 @@
 import "server-only";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { cache } from "react";
+import { readLeadershipApproval } from "./approval";
 import {
   getFirebaseAdmin,
   isFirebaseServerConfigured,
@@ -8,23 +10,21 @@ import {
 import {
   decideStaffAccess,
   hasAnyRole,
-  parseStaffRecord,
   SESSION_COOKIE,
   type StaffRole,
 } from "./policy";
 
-export async function getStaffSession() {
+export const getStaffSession = cache(async () => {
   if (!isFirebaseServerConfigured()) return null;
   const value = (await cookies()).get(SESSION_COOKIE)?.value;
   if (!value) return null;
   try {
-    const { auth, db } = getFirebaseAdmin();
+    const { auth } = getFirebaseAdmin();
     const token = await auth.verifySessionCookie(value, true);
-    const [user, record] = await Promise.all([
+    const [user, staff] = await Promise.all([
       auth.getUser(token.uid),
-      db.collection("staff_access").doc(token.uid).get(),
+      readLeadershipApproval(token.uid),
     ]);
-    const staff = parseStaffRecord(record.data());
     if (
       user.disabled ||
       decideStaffAccess({
@@ -40,7 +40,7 @@ export async function getStaffSession() {
   } catch {
     return null;
   }
-}
+});
 
 // Invoke at every private data operation, not only at the layout boundary.
 export async function requireStaff(allowed?: readonly StaffRole[]) {

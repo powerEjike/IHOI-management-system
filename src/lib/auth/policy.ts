@@ -1,19 +1,9 @@
-export const staffRoles = [
-  "super_admin",
-  "church_admin",
-  "evangelism_coordinator",
-  "secretary",
-  "follow_up_worker",
-  "content_editor",
-] as const;
+export const staffRoles = ["super_admin", "president", "coo"] as const;
 export type StaffRole = (typeof staffRoles)[number];
 export const roleLabels: Record<StaffRole, string> = {
   super_admin: "Super Admin",
-  church_admin: "Church Admin",
-  evangelism_coordinator: "Evangelism Coordinator",
-  secretary: "Secretary",
-  follow_up_worker: "Follow-Up Worker",
-  content_editor: "Content Editor",
+  president: "President",
+  coo: "Chief Operating Officer",
 };
 export type StaffRecord = {
   displayName: string;
@@ -32,8 +22,7 @@ export function parseStaffRecord(data: unknown): StaffRecord | null {
     value.displayName.length > 120 ||
     typeof value.active !== "boolean" ||
     !Array.isArray(value.roles) ||
-    value.roles.length < 1 ||
-    value.roles.length > staffRoles.length ||
+    value.roles.length !== 1 ||
     !value.roles.every(
       (role) =>
         typeof role === "string" &&
@@ -50,9 +39,7 @@ export function parseStaffRecord(data: unknown): StaffRecord | null {
 }
 
 export function requiresMfa(roles: readonly StaffRole[]): boolean {
-  return roles.some((role) =>
-    ["super_admin", "church_admin", "evangelism_coordinator"].includes(role),
-  );
+  return roles.some((role) => (staffRoles as readonly string[]).includes(role));
 }
 
 export function hasAnyRole(

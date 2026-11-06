@@ -39,6 +39,9 @@ await db.runTransaction(async (transaction) => {
       "An active Super Admin already exists. Bootstrap is only for the first administrator.",
     );
   const staffRef = db.collection("staff_access").doc(uid);
+  const slotRef = db.collection("leadership_accounts").doc("super_admin");
+  if ((await transaction.get(slotRef)).exists)
+    throw new Error("The Super Admin leadership slot is already reserved.");
   if ((await transaction.get(staffRef)).exists)
     throw new Error(
       "This staff record already exists. Review it without overwriting.",
@@ -50,6 +53,7 @@ await db.runTransaction(async (transaction) => {
     createdAt: FieldValue.serverTimestamp(),
     updatedAt: FieldValue.serverTimestamp(),
   });
+  transaction.create(slotRef, { uid, createdAt: FieldValue.serverTimestamp() });
   transaction.create(db.collection("audit_logs").doc(), {
     action: "bootstrap_super_admin",
     subjectUid: uid,

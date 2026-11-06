@@ -15,6 +15,12 @@ vi.mock("@/lib/firebase/admin", () => ({
     db: { collection: () => ({ doc: () => ({ get: mocks.get }) }) },
   }),
 }));
+vi.mock("@/lib/auth/approval", () => ({
+  readLeadershipApproval: async () => {
+    const p = await import("@/lib/auth/policy");
+    return p.parseStaffRecord((await mocks.get()).data());
+  },
+}));
 import { DELETE, POST } from "./route";
 function request(
   body: unknown = { idToken: "a".repeat(100) },
@@ -33,19 +39,19 @@ beforeEach(() => {
   mocks.verifyIdToken.mockResolvedValue({
     uid: "worker",
     auth_time: Math.floor(Date.now() / 1000),
-    firebase: {},
+    firebase: { sign_in_second_factor: "totp" },
   });
   mocks.getUser.mockResolvedValue({
     uid: "worker",
     emailVerified: true,
     disabled: false,
-    multiFactor: { enrolledFactors: [] },
+    multiFactor: { enrolledFactors: [{ uid: "test-factor" }] },
   });
   mocks.get.mockResolvedValue({
     data: () => ({
       displayName: "Test Worker",
       active: true,
-      roles: ["follow_up_worker"],
+      roles: ["coo"],
     }),
   });
   mocks.createSessionCookie.mockResolvedValue("test-session");
@@ -101,6 +107,11 @@ describe("session API security contract", () => {
     expect(mocks.createSessionCookie).not.toHaveBeenCalled();
   });
   it("does not issue a privileged session before MFA", async () => {
+    mocks.verifyIdToken.mockResolvedValue({
+      uid: "worker",
+      auth_time: Math.floor(Date.now() / 1000),
+      firebase: {},
+    });
     mocks.get.mockResolvedValue({
       data: () => ({
         displayName: "Test",

@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { ContentText } from "./content-text";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { postJson } from "@/lib/client-api";
@@ -98,7 +99,11 @@ export function PageEditor({ data }: { data: EditorData }) {
           archive removes the published copy and shows the public holding
           message.
         </p>
-        <Link href={"/" + data.slug} target="_blank" rel="noopener noreferrer">
+        <Link
+          href={data.slug === "home" ? "/" : "/" + data.slug}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           Open public page ↗
         </Link>
       </div>
@@ -141,7 +146,8 @@ export function PageEditor({ data }: { data: EditorData }) {
             ),
           )}
           <p className="field-hint">
-            Plain text with paragraph breaks. Do not include private convert
+            Text supports paragraphs, **bold**, ## headings, - lists and
+            [labels](https://example.com). Do not include private convert
             details or information awaiting permission.
           </p>
           <div className="button-row">
@@ -173,14 +179,7 @@ export function PageEditor({ data }: { data: EditorData }) {
           <h1>{copy.title}</h1>
           <p>{copy.description}</p>
           <h2>{copy.heading}</h2>
-          {copy.body.split(/\n\s*\n/).map((p, i) => (
-            <p
-              key={i}
-              style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}
-            >
-              {p}
-            </p>
-          ))}
+          <ContentText text={copy.body} />
         </article>
       ) : null}
       <section className="workspace-panel">

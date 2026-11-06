@@ -16,6 +16,6 @@ Every API call requires a current leadership session, same-origin JSON, bounded 
 
 All 61 unit/contract tests, TypeScript checking, and the production build pass. Service tests cover draft privacy, explicit publication, retained public versions during edits, archive/unpublish, revision restoration, idempotency, stale writes, guest/roster rejection, allowed public fields, and validation. Chrome with a temporary COO account verified the complete browser-to-API-to-Firestore flow, plus private preview, guest denial, and 390/768/1440px viewport fit. Fictional content and the temporary account were removed after testing. All five production public-page browser cases also passed; the local Windows runner stalled during server teardown and was stopped after the assertions completed.
 
-## Remaining scope
+## Subsequent website completion
 
-This is the first content-editing milestone. Rich text, links, image/media permissions, embeds, homepage editing, resources/projects/events/gallery catalogue records, contact/partnership/volunteer forms, and submission queues remain planned. Search indexing remains disabled until launch approval. There is no automatic website deployment.
+The subsequent website build adds homepage and partnership editing, supported text formatting/links, collection editors, permission-managed media uploads, events, private enquiry forms and their review queue. See [the current completion and handoff guide](WEBSITE-COMPLETION.md) for implemented scope, media limits and launch configuration. The verification above records the earlier page-editor milestone.

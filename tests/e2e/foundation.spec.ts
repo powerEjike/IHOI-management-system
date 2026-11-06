@@ -11,6 +11,8 @@ test("all public pages render and unknown paths return 404", async ({
     "/resources",
     "/projects",
     "/gallery",
+    "/events",
+    "/testimonies",
     "/partner",
     "/volunteer",
     "/contact",
@@ -22,6 +24,12 @@ test("all public pages render and unknown paths return 404", async ({
     expect(response.headers()["x-content-type-options"]).toBe("nosniff");
   }
   expect((await request.get("/not-a-real-page")).status()).toBe(404);
+  expect((await request.get("/resources/" + "a".repeat(32))).status()).toBe(
+    404,
+  );
+  expect((await request.get("/api/media/" + "a".repeat(32))).status()).toBe(
+    404,
+  );
   expect((await request.get("/portal/not-a-real-page")).status()).toBe(404);
   const protectedPage = await request.get("/portal/converts", {
     maxRedirects: 0,
@@ -85,9 +93,18 @@ test("mobile navigation supports opening, closing, escape, and page changes", as
 test("phone, tablet, and desktop layouts fit their viewports", async ({
   page,
 }) => {
+  test.setTimeout(90000);
   for (const width of [360, 390, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: 1000 });
-    for (const path of ["/", "/partner", "/portal"]) {
+    for (const path of [
+      "/",
+      "/partner",
+      "/portal",
+      "/gallery",
+      "/resources",
+      "/events",
+      "/contact",
+    ]) {
       await page.goto(path);
       expect(
         await page.evaluate(

@@ -1,33 +1,44 @@
 import type { Metadata } from "next";
-export const metadata: Metadata = { title: "Privacy & website status" };
-export default function PrivacyPage() {
+import { formConfig } from "@/lib/website/submissions";
+import { ContentText } from "@/components/website/content-text";
+export const metadata: Metadata = { title: "Privacy" };
+export const dynamic = "force-dynamic";
+export default async function PrivacyPage() {
+  const settings = await formConfig();
   return (
     <article className="container prose-page">
-      <p className="eyebrow">Website preview</p>
-      <h1>Privacy & website status</h1>
+      <p className="eyebrow">Your information matters</p>
+      <h1>Privacy & your information</h1>
+      {settings?.privacyNotice ? (
+        <ContentText text={settings.privacyNotice} />
+      ) : (
+        <>
+          <h2>Preparing to welcome you</h2>
+          <p>
+            The ministry is preparing its approved contact information and
+            privacy notice. Public enquiry forms remain closed until these are
+            ready.
+          </p>
+        </>
+      )}
+      <h2>Website operation</h2>
       <p>
-        This is the initial website foundation for International House of
-        Incense Ministries. Ministry copy is a draft pending approval; the
-        supplied ministry logo is in use.
+        This website does not use advertising or analytics cookies. Leadership
+        sign-in uses essential authentication cookies. Loading an external video
+        or opening an external resource connects you to that provider.
       </p>
-      <h2>Public applications are not open yet</h2>
+      <h2>Ministry enquiries</h2>
       <p>
-        Contact, volunteer, and partnership forms are not active. Approved staff
-        accounts use Firebase Authentication and server-managed access controls.
-        Do not send private personal information through development channels.
+        When forms are open, only the ministry leadership can review your
+        enquiry. An enquiry does not create a public profile or a portal
+        account. Please avoid including sensitive personal information.
       </p>
-      <h2>Technical operation</h2>
-      <p>
-        No analytics or marketing tools are installed in this application. A
-        hosting provider may process ordinary request information when serving
-        the website.
-      </p>
-      <h2>Before public launch</h2>
-      <p>
-        The ministry will publish approved contact details and a full privacy
-        notice before collecting applications or enquiries. Search indexing is
-        currently disabled.
-      </p>
+      {settings?.email ? (
+        <p>
+          For privacy questions or requests, contact{" "}
+          <a href={"mailto:" + settings.email}>{settings.email}</a>.
+        </p>
+      ) : null}
     </article>
   );
 }

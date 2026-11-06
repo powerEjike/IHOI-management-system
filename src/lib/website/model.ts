@@ -1,4 +1,4 @@
-import { isPageSlug, pages } from "@/lib/content";
+import { isEditableSlug, editablePages } from "@/lib/content";
 import { ApiError } from "@/lib/http";
 export type PageCopy = {
   title: string;
@@ -7,7 +7,7 @@ export type PageCopy = {
   body: string;
 };
 export function pageSlug(value: unknown) {
-  if (typeof value !== "string" || !isPageSlug(value))
+  if (typeof value !== "string" || !isEditableSlug(value))
     throw new ApiError(400, "invalid", "Choose an existing website page.");
   return value;
 }
@@ -33,8 +33,8 @@ export function validateCopy(raw: unknown): PageCopy {
   }
   return result;
 }
-export function initialCopy(slug: keyof typeof pages): PageCopy {
-  const p = pages[slug];
+export function initialCopy(slug: keyof typeof editablePages): PageCopy {
+  const p = editablePages[slug];
   return {
     title: p.title,
     description: p.description,

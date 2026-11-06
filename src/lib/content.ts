@@ -136,3 +136,27 @@ export const pillars = [
     href: "/projects",
   },
 ];
+
+export const editablePages = {
+  ...pages,
+  home: {
+    label: "Homepage",
+    title: "A heart for God. A life poured out for people.",
+    description:
+      "A ministry journey of evangelism, discipleship, and service. Discover the mission. Find your place in it.",
+    emptyTitle: "One mission. Many ways to live it.",
+    emptyText:
+      "From sharing the gospel to walking alongside others, our four pillars give direction to the journey.",
+  },
+  partner: {
+    label: "Partnership",
+    title: "Different gifts. A shared purpose.",
+    description: "Explore four ways to participate in the ministry journey.",
+    emptyTitle: "Walk with us.",
+    emptyText:
+      "Pray. Give. Volunteer. Go. Let us discover how your gifts can serve the ministry.",
+  },
+} as const;
+export type EditableSlug = keyof typeof editablePages;
+export const isEditableSlug = (v: string): v is EditableSlug =>
+  Object.hasOwn(editablePages, v);

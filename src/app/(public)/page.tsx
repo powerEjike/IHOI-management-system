@@ -1,8 +1,23 @@
 import Link from "next/link";
+import { publishedPage } from "@/lib/website/service";
+import { publicRecords, upcomingEvents } from "@/lib/website/records";
+import { RecordCards } from "@/components/website/public-records";
+import { ContentText } from "@/components/website/content-text";
+export const dynamic = "force-dynamic";
 import { MinistryLogo } from "@/components/brand";
 import { pillars } from "@/lib/content";
 
-export default function Home() {
+export async function generateMetadata() {
+  const copy = await publishedPage("home");
+  return copy ? { title: copy.title, description: copy.description } : {};
+}
+export default async function Home() {
+  const [copy, events, resources, testimonies] = await Promise.all([
+    publishedPage("home"),
+    upcomingEvents(),
+    publicRecords("resources", "", "", 3),
+    publicRecords("testimonies", "", "", 3),
+  ]);
   return (
     <>
       <section className="hero">
@@ -14,15 +29,19 @@ export default function Home() {
               </span>{" "}
               International House of Incense Ministries
             </p>
-            <h1>
-              A heart for God.
-              <br />A life poured out
-              <br />
-              <em>for people.</em>
-            </h1>
+            {copy ? (
+              <h1 className="custom-home-title">{copy.title}</h1>
+            ) : (
+              <h1>
+                A heart for God.
+                <br />A life poured out
+                <br />
+                <em>for people.</em>
+              </h1>
+            )}
             <p className="hero-description">
-              A ministry journey of evangelism, discipleship, and service.
-              Discover the mission. Find your place in it.
+              {copy?.description ||
+                "A ministry journey of evangelism, discipleship, and service. Discover the mission. Find your place in it."}
             </p>
             <div className="button-row">
               <Link href="/#mission" className="button">
@@ -78,17 +97,25 @@ export default function Home() {
         <div className="section-heading">
           <div>
             <p className="eyebrow">The heart of the ministry</p>
-            <h2>
-              One mission.
-              <br />
-              <em>Many ways to live it.</em>
-            </h2>
+            {copy ? (
+              <h2>{copy.heading}</h2>
+            ) : (
+              <h2>
+                One mission.
+                <br />
+                <em>Many ways to live it.</em>
+              </h2>
+            )}
           </div>
           <div className="heading-aside">
-            <p>
-              From sharing the gospel to walking alongside others, our four
-              pillars give direction to the journey.
-            </p>
+            {copy ? (
+              <ContentText text={copy.body} />
+            ) : (
+              <p>
+                From sharing the gospel to walking alongside others, our four
+                pillars give direction to the journey.
+              </p>
+            )}
             <Link className="text-link" href="/about">
               Get to know IHOI <span aria-hidden="true">↗</span>
             </Link>
@@ -122,22 +149,26 @@ export default function Home() {
               Explore outreach <span aria-hidden="true">↗</span>
             </Link>
           </div>
-          <div className="outreach-empty">
-            <div className="outreach-mark" aria-hidden="true">
-              ↗
+          {events.length ? (
+            <RecordCards records={events} />
+          ) : (
+            <div className="outreach-empty">
+              <div className="outreach-mark" aria-hidden="true">
+                ↗
+              </div>
+              <div>
+                <span className="status-label">Upcoming gatherings</span>
+                <h3>The next opportunity starts here.</h3>
+                <p>
+                  Confirmed ministry dates and locations will appear here when
+                  published.
+                </p>
+              </div>
+              <Link href="/volunteer" className="button button-outline">
+                Discover volunteering <span aria-hidden="true">→</span>
+              </Link>
             </div>
-            <div>
-              <span className="status-label">Upcoming outreach</span>
-              <h3>The next opportunity starts here.</h3>
-              <p>
-                Confirmed outreach dates and locations will appear here when
-                published.
-              </p>
-            </div>
-            <Link href="/volunteer" className="button button-outline">
-              Discover volunteering <span aria-hidden="true">→</span>
-            </Link>
-          </div>
+          )}
           <p className="impact-note">
             Stories and impact figures will be shared as approved ministry
             reports become available.
@@ -177,6 +208,34 @@ export default function Home() {
           </Link>
         </div>
       </section>
+      {resources.records.length ? (
+        <section className="container section">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">For the journey</p>
+              <h2>Words that help faith grow.</h2>
+            </div>
+            <Link className="text-link" href="/resources">
+              All resources ↗
+            </Link>
+          </div>
+          <RecordCards records={resources.records} />
+        </section>
+      ) : null}
+      {testimonies.records.length ? (
+        <section className="container section">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">Stories of faith</p>
+              <h2>Lives. Grace. New beginnings.</h2>
+            </div>
+            <Link className="text-link" href="/testimonies">
+              Read the stories ↗
+            </Link>
+          </div>
+          <RecordCards records={testimonies.records} />
+        </section>
+      ) : null}
       <section className="participate-section">
         <div className="container participate-inner">
           <p className="eyebrow">There is a place for you</p>

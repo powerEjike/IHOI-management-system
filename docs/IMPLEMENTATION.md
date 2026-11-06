@@ -46,10 +46,11 @@ Exit: unauthorized access is denied through both server and database paths. No r
 
 ## Stage 3 — Website and content operations
 
-- Implement public pages, resource browsing, projects, gallery, and basic events.
+- [x] Implement public pages, searchable resource/project/course/story collections, gallery albums, leadership biographies, and events.
 - [x] Add section-page text editing, private previews, revisions/restoration, explicit publication, unpublish/archive, and audit history.
-- [ ] Extend editing to rich content, homepage, catalogues, and media permissions.
-- Implement private contact, partnership, and volunteer queues with form abuse protection.
+- [x] Extend editing to supported formatted text/links, homepage, catalogues, media uploads, permission approval and withdrawal.
+- [x] Implement private contact, partnership, and volunteer enquiry queues with server-side abuse protection and explicit privacy/contact activation.
+- [ ] Add approved ministry content, confirm hosting/proxy configuration, and complete public launch approval.
 
 Exit: staff can publish approved content without code and drafts/private records stay private.
 

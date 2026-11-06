@@ -3,6 +3,11 @@ import { renderToStaticMarkup } from "react-dom/server";
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push() {}, refresh() {} }),
 }));
+import { RecordEditor } from "./website/record-editor";
+import { EnquiryForm } from "./website/enquiry-form";
+import { MediaLibrary } from "./website/media-library";
+import { ReviewEnquiry } from "./website/inbox";
+import { newFields } from "@/lib/website/schema";
 import { PageEditor } from "./website/page-editor";
 import { LoginForm } from "./auth/login-form";
 import { JoinForm } from "./leadership/join-form";
@@ -10,6 +15,30 @@ import { InviteForm } from "./leadership/invite-form";
 import { ConvertForm } from "./converts/convert-form";
 import { ConvertList } from "./converts/convert-list";
 it.each([
+  ["public enquiry", () => <EnquiryForm kind="contact" />],
+  ["media upload", () => <MediaLibrary media={[]} />],
+  [
+    "enquiry review",
+    () => <ReviewEnquiry id={"a".repeat(64)} status="new" revision={1} />,
+  ],
+  [
+    "catalogue editor",
+    () => (
+      <RecordEditor
+        record={{
+          id: "a".repeat(32),
+          kind: "leaders",
+          version: 0,
+          status: "draft",
+          publishedVersion: null,
+          draft: newFields("leaders"),
+          media: [],
+        }}
+        history={[]}
+        media={[]}
+      />
+    ),
+  ],
   [
     "website draft",
     () => (

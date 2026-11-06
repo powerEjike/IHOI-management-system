@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PublicEnquiries } from "@/components/website/contact-details";
+import { publishedPage } from "@/lib/website/service";
+import { ContentText } from "@/components/website/content-text";
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = { title: "Partner with us" };
 const pathways = [
@@ -13,7 +17,7 @@ const pathways = [
   },
   {
     name: "Volunteer",
-    text: "Explore opportunities to offer your skills and time. Applications will open when the review process is ready.",
+    text: "Explore opportunities to offer your skills and time. Share your interest through the volunteering page.",
     href: "/volunteer",
   },
   {
@@ -22,21 +26,33 @@ const pathways = [
     href: "/outreach",
   },
 ];
-export default function PartnerPage() {
+export default async function PartnerPage() {
+  const copy = await publishedPage("partner");
   return (
     <>
       <section className="page-hero container">
         <p className="eyebrow">Partner with IHOI</p>
-        <h1>
-          Different gifts.
-          <br />
-          <em>A shared purpose.</em>
-        </h1>
+        {copy ? (
+          <h1>{copy.title}</h1>
+        ) : (
+          <h1>
+            Different gifts.
+            <br />
+            <em>A shared purpose.</em>
+          </h1>
+        )}
         <p className="page-description">
-          Explore four ways to participate in the ministry journey.
+          {copy?.description ||
+            "Explore four ways to participate in the ministry journey."}
         </p>
       </section>
       <section className="container page-body">
+        {copy ? (
+          <article className="published-copy">
+            <h2>{copy.heading}</h2>
+            <ContentText text={copy.body} />
+          </article>
+        ) : null}
         <div className="pathway-grid">
           {pathways.map((item, index) => (
             <article className="pathway-card" key={item.name}>
@@ -52,10 +68,7 @@ export default function PartnerPage() {
             </article>
           ))}
         </div>
-        <p className="content-note">
-          Partnership enquiries will open when the secure review queue is ready.
-          This preview does not collect personal information or payments.
-        </p>
+        <PublicEnquiries kind="partnership" />
       </section>
     </>
   );

@@ -1,3 +1,7 @@
+import { PublicCollection } from "@/components/website/public-records";
+import { PublicEnquiries } from "@/components/website/contact-details";
+import { ContentText } from "@/components/website/content-text";
+import { catalogues, type Catalogue } from "@/lib/website/schema";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { publishedPage } from "@/lib/website/service";
@@ -21,12 +25,18 @@ export async function generateMetadata({
 }
 export default async function ContentPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ q?: string; cursor?: string }>;
 }) {
   const { slug } = await params;
   if (!isPageSlug(slug)) notFound();
   const page = pages[slug];
+  const query = await searchParams;
+  const kind = (Object.keys(catalogues) as Catalogue[]).find(
+    (k) => catalogues[k].path === slug,
+  );
   const copy = await publishedPage(slug);
   return (
     <>
@@ -41,16 +51,9 @@ export default async function ContentPage({
         {copy ? (
           <article className="published-copy">
             <h2>{copy.heading}</h2>
-            {copy.body.split(/\n\s*\n/).map((paragraph, index) => (
-              <p
-                key={index}
-                style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}
-              >
-                {paragraph}
-              </p>
-            ))}
+            <ContentText text={copy.body} />
           </article>
-        ) : (
+        ) : kind || slug === "contact" || slug === "volunteer" ? null : (
           <EmptyState
             title={page.emptyTitle}
             href={page.href}
@@ -59,6 +62,17 @@ export default async function ContentPage({
             <p>{page.emptyText}</p>
           </EmptyState>
         )}
+        {kind ? (
+          <PublicCollection
+            kind={kind}
+            q={query.q}
+            cursor={query.cursor}
+            heading={slug === "about" ? "Meet the leadership" : undefined}
+          />
+        ) : null}
+        {slug === "contact" || slug === "volunteer" ? (
+          <PublicEnquiries kind={slug} />
+        ) : null}
       </section>
     </>
   );

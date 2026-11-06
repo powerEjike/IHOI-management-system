@@ -18,6 +18,7 @@ export function SiteFooter() {
           <Link href="/about">Our ministry</Link>
           <Link href="/outreach">Outreach</Link>
           <Link href="/discipleship">Discipleship</Link>
+          <Link href="/events">Events & gatherings</Link>
         </div>
         <div>
           <h2>Participate</h2>
@@ -29,14 +30,15 @@ export function SiteFooter() {
           <h2>For the journey</h2>
           <Link href="/resources">Resources</Link>
           <Link href="/gallery">Gallery</Link>
-          <Link href="/portal">Staff portal</Link>
+          <Link href="/testimonies">Testimonies</Link>
+          <Link href="/portal">Leadership portal</Link>
         </div>
       </div>
       <div className="container footer-bottom">
         <span>
           © {new Date().getFullYear()} International House of Incense Ministries
         </span>
-        <Link href="/privacy">Privacy & website status</Link>
+        <Link href="/privacy">Privacy</Link>
         <span>Faith. People. Purpose.</span>
       </div>
     </footer>

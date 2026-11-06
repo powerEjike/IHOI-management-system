@@ -19,6 +19,7 @@ export function apiJson(value: unknown, status = 200) {
 }
 export async function readPrivateJson(
   request: NextRequest,
+  maxBytes = 18000,
 ): Promise<Record<string, unknown>> {
   let origin = parseSiteUrl(process.env.NEXT_PUBLIC_SITE_URL)?.origin;
   if (!origin) {
@@ -56,7 +57,7 @@ export async function readPrivateJson(
         const chunk = await reader.read();
         if (chunk.done) break;
         bytes += chunk.value.byteLength;
-        if (bytes > 18000) {
+        if (bytes > maxBytes) {
           await reader.cancel();
           throw new ApiError(
             413,

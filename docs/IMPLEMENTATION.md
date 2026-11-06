@@ -8,7 +8,7 @@
 4. Give the repository owner the exact PowerShell push command.
 5. Verify deployed behavior after deployment is configured.
 
-Do not automatically push or deploy. Keep working code and project documentation synchronized. Do not register this repository with a website-generation service.
+Git pushes remain manual. The user explicitly authorized Vercel hosting on 6 November 2026; deployments within that hosting task are authorized. Keep working code and project documentation synchronized. Do not register this repository with a website-generation service.
 
 ## Stage 0 — Product baseline
 
@@ -50,7 +50,8 @@ Exit: unauthorized access is denied through both server and database paths. No r
 - [x] Add section-page text editing, private previews, revisions/restoration, explicit publication, unpublish/archive, and audit history.
 - [x] Extend editing to supported formatted text/links, homepage, catalogues, media uploads, permission approval and withdrawal.
 - [x] Implement private contact, partnership, and volunteer enquiry queues with server-side abuse protection and explicit privacy/contact activation.
-- [ ] Add approved ministry content, confirm hosting/proxy configuration, and complete public launch approval.
+- [x] Deploy the website to Vercel with production-only keyless Firebase access and verify hosted public/private workflows.
+- [ ] Add approved ministry content/privacy details, configure the public-form secret before activation, and complete public launch approval.
 
 Exit: staff can publish approved content without code and drafts/private records stay private.
 

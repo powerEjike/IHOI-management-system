@@ -4,6 +4,7 @@ Deployment is authorized by the user's explicit hosting request. This supersedes
 
 - Team: power-ejikes-projects (team_BrISst7OCG8iLNDR4D6ae6i9).
 - Project: ihoi-management-system (prj_9GZggR6DSmYuEJeh1xBKY6BaPpV4).
+- Stable public URL: https://ihoi-management-system.vercel.app (the team-qualified alias redirects here).
 - Node.js 24, Next.js/Webpack, Cape Town functions (cpt1), existing Johannesburg Firestore.
 - Production website is public; preview deployments retain Vercel sign-in protection. No billing upgrade was requested or applied.
 
@@ -23,4 +24,10 @@ Forms stay closed until approved contact/privacy settings are published. Before 
 
 Only source/configuration files and official public logo assets are uploaded. .env files, credentials, build output, caches and local verification records are excluded. Releases can be uploaded from a reviewed local commit without pushing Git automatically. The linked GitHub repository remains the source backup; pushing is controlled by the repository owner.
 
-Runtime dependency review found an older transitive gRPC client. A compatible 1.14.7 override removes the production audit findings; development CLI advisories are separate from the deployed runtime. Deployment checks include TypeScript, tests, production build, public routes and authenticated Firebase operations.
+Runtime dependency review found an older transitive gRPC client. A compatible 1.14.7 override removes the production audit findings; development CLI advisories are separate from the deployed runtime. Deployment checks include TypeScript, 81 tests, production build, public routes and authenticated Firebase operations. The Firebase/JWT chain is bundled for compatibility with Vercel’s server runtime; no dependency downgrade or key upload is used.
+
+Production deployment: dpl_74pJsQxxzSHtjcgg5GCWgrbXdRD1, source commit c1fd84b. Both the short stable domain and the team-qualified alias are Firebase authorized domains; the latter redirects to the short stable HTTPS origin.
+
+## Hosted verification
+
+Vercel reports the production deployment READY. All five public-page browser tests pass against the HTTPS stable origin. A temporary MFA-enrolled COO successfully established a Secure session cookie and used browser registration, editing, archive/restore, search and responsive portal navigation against hosted Firestore. Guests are redirected to login. The team-qualified alias returns a 308 redirect to the canonical short domain. Temporary Auth, staff, slot and convert/audit fixtures were removed.

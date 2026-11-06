@@ -12,7 +12,7 @@ The first release focuses on outreach, manually registered converts, follow-up, 
 
 This is a source-controlled application developed locally in small, reviewable stages. Each stage is implemented and checked before being committed. The repository owner manually pushes commits and handles deployment/account setup with guidance.
 
-Implemented stack: Next.js App Router, TypeScript, Tailwind CSS, Firebase Authentication, Firebase Admin SDK, Cloud Firestore, Vitest, and Playwright. Firebase project `ihoi-management-system` uses Firestore Standard in Johannesburg. Website hosting is selected separately; no website deployment has been provisioned.
+Implemented stack: Next.js App Router, TypeScript, Tailwind CSS, Firebase Authentication, Firebase Admin SDK, Cloud Firestore, Vitest, and Playwright. Firebase project `ihoi-management-system` uses Firestore Standard in Johannesburg. The website is hosted on Vercel with production-only, keyless Google/Firebase access. See [hosting setup](docs/VERCEL-HOSTING.md).
 
 ## Current status
 
@@ -23,6 +23,12 @@ The current portal has three reserved accounts only: Super Admin, President, and
 The website now has homepage editing, leadership biographies, resources, projects, events, gallery albums, courses, outreach stories, testimonies, permission-managed photo uploads, public contact settings and private enquiry reviews. Drafts stay private until publication. Forms stay closed until approved contact/privacy settings and server protection are configured. See [website completion and handoff](docs/WEBSITE-COMPLETION.md).
 
 See [Firebase setup](docs/FIREBASE-SETUP.md) for the credential boundary, bootstrap process, and setup status. The public web identifiers belong in `.env.local`; Admin credentials must stay server-only and outside Git.
+
+## Hosted website
+
+[Public website](https://ihoi-management-system.vercel.app) · [Leadership login](https://ihoi-management-system.vercel.app/portal/login)
+
+Ministry content is still being prepared. Forms and search indexing remain closed until approved launch settings are ready.
 
 ## Run locally
 
@@ -44,7 +50,7 @@ npm run test:e2e
 
 `check` runs type checking, unit tests, and a production build. Browser tests start their own production server on port 3100, so run a build first and leave that port free. On Windows the tests use installed Google Chrome. Elsewhere run `npx playwright install chromium` once. Set `PLAYWRIGHT_CHANNEL` if another supported installed channel is needed. To test an already running production server, set `PLAYWRIGHT_BASE_URL` to its local URL; the test runner then leaves that server under your control.
 
-The current milestone passes 78 unit/contract tests and live Firebase checks, including leadership invitations, access enforcement, converts, duplicate review, and audit history. Chrome browser checks passed registration, editing, archive/restore, search, responsive private layouts, mobile sign-out, and absence of runtime errors. See [current verification](docs/LEADERSHIP-AND-CONVERTS.md). Earlier foundation/browser limitations are historical.
+The current milestone passes 81 unit/contract tests and live Firebase checks, including leadership invitations, access enforcement, converts, duplicate review, and audit history. Chrome browser checks passed registration, editing, archive/restore, search, responsive private layouts, mobile sign-out, and absence of runtime errors. See [current verification](docs/LEADERSHIP-AND-CONVERTS.md). Earlier foundation/browser limitations are historical.
 
 Build/dev scripts use Webpack to avoid local Turbopack junction restrictions; normal clean builds remain the default. See `docs/FIREBASE-SETUP.md` for the optional restricted-Windows build workaround.
 

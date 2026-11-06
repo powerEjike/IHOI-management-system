@@ -3,6 +3,8 @@
 > Current milestone: see [Leadership and converts verification](LEADERSHIP-AND-CONVERTS.md). The three-account leadership model and successful Chrome checks supersede earlier staff-role examples and browser limitations below.
 
 
+> Hosted production now uses Vercel and keyless Firebase access; see [Vercel hosting](VERCEL-HOSTING.md). The setup details below include the earlier local-only milestone.
+
 ## Project
 
 - Firebase project: `ihoi-management-system`.

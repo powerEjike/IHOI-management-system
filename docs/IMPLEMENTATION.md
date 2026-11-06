@@ -18,12 +18,13 @@ Do not automatically push or deploy. Keep working code and project documentation
 
 ## Stage 1 — Application foundation
 
-- Scaffold Next.js App Router with TypeScript and Tailwind.
-- Add public and portal layout boundaries and a responsive design system.
-- Add environment-variable examples with placeholders and validation.
-- Configure type checking, business-rule tests, and build verification.
-- Establish a local preview with honest empty states and clearly marked content placeholders.
-- Do not imply staff authentication works before it is connected.
+- [x] Scaffold Next.js App Router with TypeScript and Tailwind.
+- [x] Add public and portal layout boundaries and a responsive design system.
+- [x] Add environment-variable examples with placeholders and validation.
+- [x] Configure type checking, configuration tests, and build verification.
+- [x] Implement public preview pages with honest empty states and draft-content notices.
+- [x] Clearly mark staff authentication as unavailable until connected.
+- [ ] Complete interactive browser/visual QA; local Edge startup is currently failing before page interaction.
 
 Exit: the application builds, the public shell renders, and configuration is documented.
 

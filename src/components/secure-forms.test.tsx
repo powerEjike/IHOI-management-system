@@ -3,12 +3,33 @@ import { renderToStaticMarkup } from "react-dom/server";
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push() {}, refresh() {} }),
 }));
+import { PageEditor } from "./website/page-editor";
 import { LoginForm } from "./auth/login-form";
 import { JoinForm } from "./leadership/join-form";
 import { InviteForm } from "./leadership/invite-form";
 import { ConvertForm } from "./converts/convert-form";
 import { ConvertList } from "./converts/convert-list";
 it.each([
+  [
+    "website draft",
+    () => (
+      <PageEditor
+        data={{
+          slug: "about",
+          version: 0,
+          draft: {
+            title: "Title",
+            description: "Summary",
+            heading: "Heading",
+            body: "Body",
+          },
+          publishedVersion: null,
+          status: "draft",
+          history: [],
+        }}
+      />
+    ),
+  ],
   ["login", () => <LoginForm />],
   ["leadership signup", () => <JoinForm />],
   ["invitation", () => <InviteForm />],

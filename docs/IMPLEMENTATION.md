@@ -24,7 +24,7 @@ Do not automatically push or deploy. Keep working code and project documentation
 - [x] Configure type checking, configuration tests, and build verification.
 - [x] Implement public preview pages with honest empty states and draft-content notices.
 - [x] Clearly mark staff authentication as unavailable until connected.
-- [ ] Complete interactive browser/visual QA; local Edge startup is currently failing before page interaction.
+- [x] Complete interactive Chrome browser QA, mobile navigation and responsive public/private layouts.
 
 Exit: the application builds, the public shell renders, and configuration is documented.
 
@@ -47,7 +47,8 @@ Exit: unauthorized access is denied through both server and database paths. No r
 ## Stage 3 — Website and content operations
 
 - Implement public pages, resource browsing, projects, gallery, and basic events.
-- Add content editing, revisions, preview, publication, and media permissions.
+- [x] Add section-page text editing, private previews, revisions/restoration, explicit publication, unpublish/archive, and audit history.
+- [ ] Extend editing to rich content, homepage, catalogues, and media permissions.
 - Implement private contact, partnership, and volunteer queues with form abuse protection.
 
 Exit: staff can publish approved content without code and drafts/private records stay private.

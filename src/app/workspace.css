@@ -580,3 +580,25 @@
     margin-left: auto;
   }
 }
+
+.website-preview h1 {
+  font-size: clamp(28px, 3vw, 44px);
+  overflow-wrap: anywhere;
+}
+.website-preview h2 {
+  margin-top: 28px;
+  overflow-wrap: anywhere;
+}
+.workspace-panel details {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+}
+.workspace-panel summary {
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+.website-editor fieldset {
+  display: grid;
+  gap: 22px;
+}

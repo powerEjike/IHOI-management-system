@@ -26,6 +26,9 @@ export function Workspace({
           <Link href="/portal/converts">
             Converts <span aria-hidden="true">↗</span>
           </Link>
+          <Link href="/portal/website">
+            Website content <span aria-hidden="true">↗</span>
+          </Link>
           {staff.roles[0] === "super_admin" ? (
             <Link href="/portal/accounts">
               Leadership accounts <span aria-hidden="true">↗</span>

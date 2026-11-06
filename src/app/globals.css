@@ -1199,3 +1199,17 @@ p {
     transition: none !important;
   }
 }
+
+.published-copy {
+  max-width: 780px;
+  margin-inline: auto;
+}
+.published-copy h2 {
+  font-size: clamp(28px, 4vw, 42px);
+  margin-bottom: 28px;
+  overflow-wrap: anywhere;
+}
+.published-copy p {
+  line-height: 1.9;
+  margin-block: 20px;
+}

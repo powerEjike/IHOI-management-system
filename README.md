@@ -20,6 +20,8 @@ The public application foundation and official ministry logo are implemented. Fi
 
 The current portal has three reserved accounts only: Super Admin, President, and COO. The Super Admin can invite President/COO to create their own verified accounts. All three have access to the working converts register: create, duplicate review, search, filters, edit, leadership follow-up assignment, archive/restore, and audit history. Workers and volunteers do not receive logins. See [leadership and converts](docs/LEADERSHIP-AND-CONVERTS.md).
 
+Website page text can now be edited, previewed privately, published, unpublished, archived, and restored through **Website content**. See [website publishing](docs/WEBSITE-CONTENT.md) for the current scope.
+
 See [Firebase setup](docs/FIREBASE-SETUP.md) for the credential boundary, bootstrap process, and setup status. The public web identifiers belong in `.env.local`; Admin credentials must stay server-only and outside Git.
 
 ## Run locally
@@ -42,7 +44,7 @@ npm run test:e2e
 
 `check` runs type checking, unit tests, and a production build. Browser tests start their own production server on port 3100, so run a build first and leave that port free. On Windows the tests use installed Google Chrome. Elsewhere run `npx playwright install chromium` once. Set `PLAYWRIGHT_CHANNEL` if another supported installed channel is needed.
 
-The current milestone passes 54 unit/contract tests and live Firebase checks, including leadership invitations, access enforcement, converts, duplicate review, and audit history. Chrome browser checks passed registration, editing, archive/restore, search, responsive private layouts, mobile sign-out, and absence of runtime errors. See [current verification](docs/LEADERSHIP-AND-CONVERTS.md). Earlier foundation/browser limitations are historical.
+The current milestone passes 61 unit/contract tests and live Firebase checks, including leadership invitations, access enforcement, converts, duplicate review, and audit history. Chrome browser checks passed registration, editing, archive/restore, search, responsive private layouts, mobile sign-out, and absence of runtime errors. See [current verification](docs/LEADERSHIP-AND-CONVERTS.md). Earlier foundation/browser limitations are historical.
 
 Build/dev scripts use Webpack to avoid local Turbopack junction restrictions; normal clean builds remain the default. See `docs/FIREBASE-SETUP.md` for the optional restricted-Windows build workaround.
 

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Flame } from "@/components/brand";
+import { MinistryLogo } from "@/components/brand";
 import { pillars } from "@/lib/content";
 
 export default function Home() {
@@ -12,7 +12,7 @@ export default function Home() {
               <span className="small-star" aria-hidden="true">
                 ✦
               </span>{" "}
-              International House of Incense
+              International House of Incense Ministries
             </p>
             <h1>
               A heart for God.
@@ -43,7 +43,7 @@ export default function Home() {
             <div className="arch">
               <div className="arch-lines" />
               <div className="art-label">A LIFE OF WORSHIP</div>
-              <Flame className="hero-flame" />
+              <MinistryLogo className="hero-ministry-logo" />
               <div className="arch-word">
                 Let faith
                 <br />

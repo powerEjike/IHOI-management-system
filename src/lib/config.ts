@@ -22,7 +22,7 @@ export function parseSiteUrl(value: string | undefined): URL | undefined {
 }
 
 export const site = {
-  name: "International House of Incense",
+  name: "International House of Incense Ministries",
   shortName: "IHOI",
   description:
     "Evangelize. Disciple. Empower. Transform. Explore the ministry, outreach, and discipleship of International House of Incense.",

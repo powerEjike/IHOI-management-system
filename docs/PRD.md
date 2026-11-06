@@ -2,8 +2,8 @@
 
 ## Working Product Requirements Document
 
-**Ministry:** International House of Incense (IHOI)
-**Version:** 1.1 — Consolidated working baseline
+**Ministry:** International House of Incense Ministries (IHOI)
+**Version:** 1.2 — Firebase implementation baseline
 **Date:** 6 November 2026
 **Release:** Single-ministry responsive web application
 **Status:** Ready to guide design and implementation; production content and account owners remain launch inputs.
@@ -278,10 +278,11 @@ CSV exports follow the same permissions and filters as the screen. Private perso
 ### Recommended implementation
 
 - Next.js App Router and TypeScript; Tailwind CSS and accessible reusable UI components.
-- Supabase PostgreSQL, Auth, and Storage.
+- Firebase Authentication, Cloud Firestore, and Cloud Storage for Firebase. The Firebase project, database edition, and location are confirmed during setup; no billing upgrade is implicit.
+- Confirmed setup: project `ihoi-management-system`, Firestore Standard native mode, `(default)` database in Johannesburg (`africa-south1`), with the available free tier. Storage and paid hosting/schedulers are not provisioned by this stage.
 - One modular application with public routes, protected portal routes, and server-side services.
 - Compatible managed hosting, with a scheduler capable of hourly authenticated jobs.
-- GitHub source control and versioned database migrations.
+- GitHub source control, versioned Firestore/Storage rules and index definitions, and explicit data migration scripts when needed.
 - Vitest for business-rule tests and Playwright for critical workflows and permission checks.
 - Separate development, staging, and production configuration and data.
 
@@ -289,10 +290,12 @@ The hosting provider may change without altering product requirements. Infrastru
 
 ### Core records
 
-`profiles`, `role_assignments`, `converts`, `assignment_history`, `follow_up_actions`, `contact_logs`, `notifications`, `outreaches`, `communities`, `outreach_team_members`, `courses`, `course_versions`, `lessons`, `enrolments`, `lesson_progress`, `volunteer_applications`, `workers`, `worker_clearances`, `resources`, `projects`, `events`, `gallery_albums`, `media_assets`, `testimonies`, `partnership_submissions`, `contact_submissions`, `content_revisions`, `site_settings`, `audit_logs`, `job_runs`.
+`staff_access`, `profiles`, `converts`, `assignment_history`, `follow_up_actions`, `contact_logs`, `notifications`, `outreaches`, `communities`, `outreach_team_members`, `courses`, `course_versions`, `lessons`, `enrolments`, `lesson_progress`, `volunteer_applications`, `workers`, `worker_clearances`, `resources`, `projects`, `events`, `gallery_albums`, `media_assets`, `testimonies`, `partnership_submissions`, `contact_submissions`, `content_revisions`, `site_settings`, `audit_logs`, `job_runs`.
 
-- Use foreign keys, validation constraints, and indexes for common searches and assignment/date queries.
-- Public views/responses are allowlists of approved fields. Review database view/function privileges to avoid bypassing row-level security.
+- Use bounded document schemas, explicit IDs/references, transactional relationship checks, and indexes for common searches and assignment/date queries. Firestore does not enforce SQL foreign keys.
+- Public projections/responses contain only approved fields; private notes and public content use separate documents. Firestore rules apply to whole documents, not individual fields.
+- The initial portal uses a server-only data boundary: direct browser Firestore reads/writes are denied. Firebase Admin SDK bypasses rules, so every server data operation must check the session, live staff approval, role, and assignment scope explicitly.
+- Store live active status and roles in server-managed `staff_access/{uid}` records. Never accept role assignments from browser input or editable profile metadata.
 - Private storage requires authorized access or short-lived links. Public storage contains approved publication assets only.
 - Service credentials remain server-side. Browser clients never receive privileged database secrets.
 - Archiving preserves relationships. Hard deletion follows the retention process, not ordinary record editing.
@@ -301,6 +304,7 @@ The hosting provider may change without altering product requirements. Infrastru
 
 - Enforce permissions on every server operation and through database/storage policies. Test direct access attempts using real role-scoped sessions.
 - Require MFA for privileged roles before they can use production operational functions.
+- Use Firebase TOTP MFA with Identity Platform when enabled and authorized. If unavailable, privileged sessions remain blocked; do not silently reduce this requirement. Setup/cost implications must be reviewed before enabling the service.
 - Use HTTPS, secure session handling, sign-in throttling, password recovery, and idle-session expiry with advance warning for unsaved forms.
 - Validate inputs on the server; sanitize rich text and restrict uploads by actual type and size. Default image limit: 10 MB; published document limit: 25 MB. Executable content is rejected.
 - Keep private personal information out of URLs, analytics events, error messages, public media metadata, and routine application logs.

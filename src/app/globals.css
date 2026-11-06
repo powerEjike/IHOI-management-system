@@ -9,6 +9,82 @@
   --serif: Georgia, "Times New Roman", serif;
   --sans: Arial, Helvetica, sans-serif;
 }
+.auth-form-wrap {
+  margin-top: 25px;
+}
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.auth-form label {
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 7px;
+}
+.auth-form input {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid #b9adbb;
+  background: white;
+  padding: 12px;
+  font: inherit;
+  border-radius: 2px;
+}
+.auth-form .button {
+  margin-top: 10px;
+}
+.auth-form button:disabled,
+.auth-form-wrap button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+  transform: none;
+}
+.auth-message {
+  padding: 14px;
+  background: #eee8dc;
+  font-size: 13px;
+}
+.auth-actions {
+  margin-top: 20px;
+}
+.auth-actions button {
+  background: none;
+  border: 0;
+  padding: 0;
+  text-decoration: underline;
+  font-size: 12px;
+  cursor: pointer;
+}
+.auth-home-link {
+  margin-top: 30px;
+}
+.mfa-secret {
+  padding: 18px;
+  background: #eee8dc;
+  font-size: 13px;
+}
+.mfa-secret p {
+  margin: 12px 0;
+}
+.mfa-secret code {
+  overflow-wrap: anywhere;
+  display: block;
+  padding: 10px;
+  background: white;
+  user-select: all;
+}
+.role-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+}
+.role-badges span {
+  padding: 5px 12px;
+  border: 1px solid var(--line);
+  font-size: 11px;
+}
 @theme inline {
   --color-background: var(--paper);
   --color-foreground: var(--ink);
@@ -119,6 +195,19 @@ p {
   width: 28px;
   height: 38px;
   color: var(--ink);
+}
+.brand-logo {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  border-radius: 3px;
+}
+.hero-ministry-logo {
+  width: min(280px, 78%);
+  height: auto;
+  object-fit: contain;
+  margin: 22px 0;
+  border-radius: 4px;
 }
 .brand strong {
   font-size: 31px;

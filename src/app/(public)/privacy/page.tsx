@@ -7,13 +7,14 @@ export default function PrivacyPage() {
       <h1>Privacy & website status</h1>
       <p>
         This is the initial website foundation for International House of
-        Incense. Ministry copy and branding are drafts pending approval.
+        Incense Ministries. Ministry copy is a draft pending approval; the
+        supplied ministry logo is in use.
       </p>
-      <h2>No applications or private records yet</h2>
+      <h2>Public applications are not open yet</h2>
       <p>
-        Contact, volunteer, and partnership forms are not active. There is no
-        staff sign-in or connected ministry database in this version. Do not
-        send private personal information through development channels.
+        Contact, volunteer, and partnership forms are not active. Approved staff
+        accounts use Firebase Authentication and server-managed access controls.
+        Do not send private personal information through development channels.
       </p>
       <h2>Technical operation</h2>
       <p>

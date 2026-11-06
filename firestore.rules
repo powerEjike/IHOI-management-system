@@ -1,0 +1,15 @@
+rules_version = '2';
+// Foundation data model:
+// staff_access/{authUid}: displayName (string, 1..120), active (bool),
+// roles (non-empty bounded list of approved role IDs), createdAt/updatedAt (timestamp).
+// All staff records and future operational collections are SERVER-ONLY.
+// No browser CRUD is supported in this stage. The Admin SDK bypasses these
+// rules: server session/role checks and operator IAM are separate requirements.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function clientAccessEnabled() { return false; }
+    match /{document=**} {
+      allow read, create, update, delete: if clientAccessEnabled();
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "auth": { "providers": { "emailPassword": true, "anonymous": false } },
+  "firestore": {
+    "database": "(default)",
+    "edition": "standard",
+    "location": "africa-south1",
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  }
+}

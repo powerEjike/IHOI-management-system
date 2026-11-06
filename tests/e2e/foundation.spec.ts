@@ -105,12 +105,16 @@ test("phone, tablet, and desktop layouts fit their viewports", async ({
   });
 });
 
-test("unconnected forms and staff access cannot collect credentials or records", async ({
+test("public submissions stay inactive and private staff pages require sign-in", async ({
   page,
 }) => {
-  for (const path of ["/contact", "/volunteer", "/partner", "/portal"]) {
+  for (const path of ["/contact", "/volunteer", "/partner"]) {
     await page.goto(path);
     await expect(page.locator("form, input, textarea")).toHaveCount(0);
   }
-  await expect(page.getByText("Authentication is not connected")).toBeVisible();
+  await page.goto("/portal/dashboard");
+  await expect(page).toHaveURL(/\/portal\/login$/);
+  await expect(page.getByRole("heading", { level: 1 })).toContainText(
+    "staff portal",
+  );
 });

@@ -33,7 +33,9 @@ export function SiteFooter() {
         </div>
       </div>
       <div className="container footer-bottom">
-        <span>© {new Date().getFullYear()} International House of Incense</span>
+        <span>
+          © {new Date().getFullYear()} International House of Incense Ministries
+        </span>
         <Link href="/privacy">Privacy & website status</Link>
         <span>Faith. People. Purpose.</span>
       </div>

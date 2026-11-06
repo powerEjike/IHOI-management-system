@@ -30,10 +30,15 @@ Exit: the application builds, the public shell renders, and configuration is doc
 
 ## Stage 2 — Identity and database security
 
-- Configure the authorized Supabase project and versioned migrations.
-- Implement sign-in, invitation/recovery flow, roles, MFA enforcement, and deactivation.
-- Establish server checks, row-level security, private/public storage separation, and audit logging.
-- Test access as public, worker, coordinator, editor, and administrator users.
+- [x] Create the dedicated Firebase project and Standard Firestore database in Johannesburg.
+- [x] Enable Firebase email/password authentication and save local web configuration.
+- [x] Implement sign-in/recovery, verified-email checks, TOTP enrollment/challenge, and server sessions.
+- [x] Add live staff approval/role checks, fail-closed browser database rules, and a first-admin bootstrap script.
+- [x] Verify the local server runtime credential.
+- [x] Create the intended first administrator and verify privileged MFA access with a temporary account.
+- [ ] First administrator completes their own password, email-verification, and authenticator setup.
+- [ ] Implement the staff-management UI, invitation workflow, audited role/deactivation changes, and idle timeout.
+- [x] Complete live role/MFA/session tests with a temporary account and remove its Auth/staff records.
 
 Exit: unauthorized access is denied through both server and database paths. No real private submissions are collected before this stage passes.
 

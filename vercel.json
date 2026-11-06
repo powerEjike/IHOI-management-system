@@ -2,5 +2,18 @@
   "framework": "nextjs",
   "regions": ["cpt1"],
   "buildCommand": "npm run build",
-  "installCommand": "npm ci"
+  "installCommand": "npm ci",
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "ihoi-management-system-power-ejikes-projects.vercel.app"
+        }
+      ],
+      "destination": "https://ihoi-management-system.vercel.app/:path*",
+      "permanent": true
+    }
+  ]
 }
